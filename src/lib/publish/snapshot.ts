@@ -3,10 +3,12 @@ import fs from 'fs/promises';
 import path from 'path';
 import { Page } from '../schema/pageSchema';
 
+const getBaseDir = () => process.env.NODE_ENV === 'production' ? '/tmp' : process.cwd();
+
 export async function createSnapshot(page: Page, version: string) {
   const hash = crypto.createHash('sha256').update(JSON.stringify(page)).digest('hex');
   
-  const snapshotDir = path.join(process.cwd(), 'releases', page.slug);
+  const snapshotDir = path.join(getBaseDir(), 'releases', page.slug);
   await fs.mkdir(snapshotDir, { recursive: true });
 
   const snapshotPath = path.join(snapshotDir, `${version}.json`);
@@ -27,7 +29,7 @@ export async function createSnapshot(page: Page, version: string) {
 
 export async function getLastSnapshotHash(slug: string): Promise<string | null> {
   try {
-    const latestPath = path.join(process.cwd(), 'releases', slug, 'latest.json');
+    const latestPath = path.join(getBaseDir(), 'releases', slug, 'latest.json');
     const content = await fs.readFile(latestPath, 'utf-8');
     const data = JSON.parse(content);
     return data.hash;

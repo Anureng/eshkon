@@ -28,7 +28,8 @@ export default async function PreviewPage({
 
   let page = null;
   try {
-    const latestPath = path.join(process.cwd(), 'releases', slug, 'latest.json');
+    const baseDir = process.env.NODE_ENV === 'production' ? '/tmp' : process.cwd();
+    const latestPath = path.join(baseDir, 'releases', slug, 'latest.json');
     const content = await fs.readFile(latestPath, 'utf-8');
     const data = JSON.parse(content);
     page = data.page;
