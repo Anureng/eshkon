@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface PublishState {
-  status: 'idle' | 'publishing' | 'done' | 'error';
+  status: 'idle' | 'publishing' | 'published' | 'error';
   currentVersion: string | null;
   lastPublishedAt: string | null;
 }
@@ -20,7 +20,7 @@ const publishSlice = createSlice({
       state.status = 'publishing';
     },
     publishSuccess(state, action: PayloadAction<{ version: string; publishedAt: string }>) {
-      state.status = 'done';
+      state.status = 'published';
       state.currentVersion = action.payload.version;
       state.lastPublishedAt = action.payload.publishedAt;
     },

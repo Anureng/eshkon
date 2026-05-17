@@ -20,13 +20,13 @@ export async function POST(req: NextRequest) {
     const draftHash = crypto.createHash('sha256').update(JSON.stringify(draftPage)).digest('hex');
 
     if (lastHash === draftHash) {
-      return NextResponse.json({ success: true, version: 'No change', publishedAt: new Date().toISOString() });
+      return NextResponse.json({ success: true, version: 'No change', publishedAt: new Date().toISOString(), summary: 'Draft is identical to last snapshot.' });
     }
 
     const newVersion = `${Date.now()}-${bumpType}`;
     await createSnapshot(draftPage, newVersion);
 
-    return NextResponse.json({ success: true, version: newVersion, publishedAt: new Date().toISOString() });
+    return NextResponse.json({ success: true, version: newVersion, publishedAt: new Date().toISOString(), summary: `Published with a ${bumpType} version bump.` });
   } catch (err: any) {
     console.error(err);
     return NextResponse.json({ error: err.message }, { status: 500 });

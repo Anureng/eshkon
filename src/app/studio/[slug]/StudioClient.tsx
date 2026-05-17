@@ -5,8 +5,9 @@ import { RootState } from '../../../store';
 import { loadPage, reorderSections, removeSection, updateSectionProp, addSection } from '../../../store/slices/draftPageSlice';
 import { selectSection } from '../../../store/slices/uiSlice';
 import { Page, Section } from '../../../lib/schema/pageSchema';
-import SectionRenderer from '../../../components/SectionRenderer';
+import LivePreview from '../../../components/LivePreview';
 import { publishStart, publishSuccess, publishError } from '../../../store/slices/publishSlice';
+import { publishPage } from '../../actions/publishAction';
 
 export default function StudioClient({ initialPage, slug, role }: { initialPage: Page; slug: string; role: string }) {
   const dispatch = useDispatch();
@@ -14,25 +15,23 @@ export default function StudioClient({ initialPage, slug, role }: { initialPage:
   const selectedSectionId = useSelector((state: RootState) => state.ui.selectedSectionId);
 
   useEffect(() => {
-    dispatch(loadPage(initialPage));
-  }, [dispatch, initialPage]);
+    if (!page || page.slug !== slug) {
+      dispatch(loadPage(initialPage));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, initialPage, slug]);
 
   if (!page) return <div className="p-10">Loading...</div>;
 
   const handlePublish = async () => {
     dispatch(publishStart());
     try {
-      const res = await fetch('/api/publish', {
-        method: 'POST',
-        body: JSON.stringify({ draftPage: page, slug }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      const data = await publishPage(page, slug);
       dispatch(publishSuccess({ version: data.version, publishedAt: data.publishedAt }));
       alert(`Published successfully! Version: ${data.version}`);
-    } catch (err) {
+    } catch (err: any) {
       dispatch(publishError());
-      alert('Publish failed');
+      alert('Publish failed: ' + err.message);
     }
   };
 
@@ -99,11 +98,11 @@ export default function StudioClient({ initialPage, slug, role }: { initialPage:
       <div className="flex-1 bg-gray-100 flex flex-col relative overflow-hidden">
          <div className="p-3 border-b bg-white flex justify-between items-center shadow-sm z-10 absolute top-0 w-full">
            <span className="font-medium text-gray-700 text-sm">Live Preview</span>
-           <a href={`/preview/${slug}?preview=true`} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-600 text-xs font-medium">Open Preview ↗</a>
+           <a href={`/preview/${slug}?draft=true`} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-600 text-xs font-medium">Open Preview ↗</a>
          </div>
          <div className="flex-1 overflow-y-auto pt-14 pb-8 px-8">
            <div className="bg-white rounded shadow-xl overflow-hidden min-h-[600px] border">
-             <SectionRenderer sections={page.sections} />
+             <LivePreview />
            </div>
          </div>
       </div>
