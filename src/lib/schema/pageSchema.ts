@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const sectionSchema = z.object({
   sectionId: z.string(),
   type: z.string(),
-  props: z.record(z.any()),
+  props: z.record(z.string(), z.any()),
 });
 
 export const pageSchema = z.object({
