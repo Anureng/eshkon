@@ -27,7 +27,10 @@ export default function StudioClient({ initialPage, slug, role }: { initialPage:
     dispatch(publishStart());
     try {
       const data = await publishPage(page, slug);
-      dispatch(publishSuccess({ version: data.version, publishedAt: data.publishedAt }));
+      if (!data.success) {
+        throw new Error(data.error as string);
+      }
+      dispatch(publishSuccess({ version: data.version as string, publishedAt: data.publishedAt as string }));
       alert(`Published successfully! Version: ${data.version}`);
     } catch (err: any) {
       dispatch(publishError());

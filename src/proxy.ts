@@ -9,7 +9,6 @@ export function proxy(request: NextRequest) {
     if (role === 'editor' || role === 'publisher') {
       return NextResponse.next();
     }
-    // redirect to preview if not editor/publisher
     const url = request.nextUrl.clone();
     url.pathname = pathname.replace('/studio/', '/preview/');
     return NextResponse.redirect(url);
