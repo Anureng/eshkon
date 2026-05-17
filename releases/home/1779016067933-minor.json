@@ -1,0 +1,41 @@
+{
+  "version": "1779016067933-minor",
+  "timestamp": "2026-05-17T11:07:47.938Z",
+  "hash": "4a80c36293b17d938c57298f1d0282d0059f3d64b37e7e1960c0de18bb736974",
+  "page": {
+    "pageId": "page-1",
+    "slug": "home",
+    "title": "Home Page",
+    "sections": [
+      {
+        "sectionId": "section-features-1",
+        "type": "featureGrid",
+        "props": {
+          "title": "Our Features",
+          "items": []
+        }
+      },
+      {
+        "sectionId": "section-cta-1",
+        "type": "cta",
+        "props": {
+          "label": "Get Started",
+          "url": "/start"
+        }
+      },
+      {
+        "sectionId": "section-hero-1",
+        "type": "hero",
+        "props": {
+          "headline": "Welcome to Page Studio",
+          "subtext": "Build and publish pages visually"
+        }
+      },
+      {
+        "sectionId": "sec_1779016057607",
+        "type": "featureGrid",
+        "props": {}
+      }
+    ]
+  }
+}
